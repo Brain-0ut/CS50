@@ -63,14 +63,6 @@ int main(int argc, string argv[])
         return 3;
     }
 
-    /*for(int i = 0; i < MAX_VOTERS; i++)
-    {
-        for(int j = 0; j < MAX_CANDIDATES; j++)
-        {
-            preferences[i][j] = -1;
-        }
-    }*/
-
     // Keep querying for votes
     for (int i = 0; i < voter_count; i++)
     {
@@ -91,29 +83,11 @@ int main(int argc, string argv[])
         printf("\n");
     }
 
-    /*for (int i = 0; i < voter_count; i++)
-    {
-        for (int j = 0; j < candidate_count; j++)
-        {
-            printf("%i ", preferences[i][j]);
-        }
-        printf("\n");
-    }
-    return 0;*/
-
     // Keep holding runoffs until winner exists
     while (true)
     {
         // Calculate votes given remaining candidates
         tabulate();
-
-        /*for (int j = 0; j < candidate_count; j++)
-        {
-            printf("%s - %i ", candidates[j].name, candidates[j].votes);
-            printf("\n");
-        }
-        printf("\n");
-        //return 0;*/
 
         // Check if election has been won
         bool won = print_winner();
@@ -153,31 +127,6 @@ int main(int argc, string argv[])
 }
 
 // Record preference if vote is valid
-/*bool vote(int voter, int rank, string name)
-{
-    int x = 0;
-    int s = strcmp(candidates[x].name, name);
-    while (s != 0 && x < candidate_count-1)
-    {
-        x++;
-        s = strcmp(candidates[x].name, name);
-    }
-    x++;
-    //printf("%i\n", x);
-    if (s)
-    {
-        return false;
-    }
-    for (int i = 0; i < candidate_count; i++)
-    {
-        if (preferences[voter][i] == x)
-        {
-            return false;
-        }
-    }
-    preferences[voter][rank] = x;
-    return true;
-}*/
 bool vote(int voter, int rank, string name)
 {
     for (int i = 0; i < candidate_count; i++)
