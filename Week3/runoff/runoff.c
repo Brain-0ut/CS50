@@ -79,7 +79,6 @@ int main(int argc, string argv[])
                 return 4;
             }
         }
-
         printf("\n");
     }
 
@@ -176,16 +175,12 @@ bool print_winner(void)
 // Return the minimum number of votes any remaining candidate has
 int find_min(void)
 {
-    int x;
-    for (int i = 0; i < candidate_count - 1; i++)
+    int x = INT_MAX;
+    for (int i = 0; i < candidate_count; i++)
     {
-        if (!candidates[i].eliminated)
+        if (!candidates[i].eliminated && x > candidates[i].votes)
         {
             x = candidates[i].votes;
-            if (x > candidates[i + 1].votes && !candidates[i+1].eliminated)
-            {
-                x = candidates[i + 1].votes;
-            }
         }
     }
     return x;
