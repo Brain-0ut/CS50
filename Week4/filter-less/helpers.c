@@ -1,6 +1,8 @@
 #include "helpers.h"
 #include <math.h>
 
+#define MIN(x, y) (((x) < (y)) ? (x) : (y))
+
 // Convert image to grayscale
 void grayscale(int height, int width, RGBTRIPLE image[height][width])
 {
@@ -15,7 +17,6 @@ void grayscale(int height, int width, RGBTRIPLE image[height][width])
             image[i][j].rgbtRed = gray;
         }
     }
-    return;
 }
 
 // Convert image to sepia
@@ -30,24 +31,14 @@ void sepia(int height, int width, RGBTRIPLE image[height][width])
             int sepiaGreen = rint(.349 * image[i][j].rgbtRed + .686 * image[i][j].rgbtGreen + .168 * image[i][j].rgbtBlue);
             int sepiaBlue = rint(.272 * image[i][j].rgbtRed + .534 * image[i][j].rgbtGreen + .131 * image[i][j].rgbtBlue);
             // if sepia more than 255 for each colour the colour should be the 255
-            if (sepiaRed > 255)
-            {
-                sepiaRed = 255;
-            }
-            if (sepiaGreen > 255)
-            {
-                sepiaGreen = 255;
-            }
-            if (sepiaBlue > 255)
-            {
-                sepiaBlue = 255;
-            }
+            sepiaRed = MIN(sepiaRed, 255);
+            sepiaGreen = MIN(sepiaGreen, 255);
+            sepiaBlue = MIN(sepiaBlue, 255);
             image[i][j].rgbtBlue = sepiaBlue;
             image[i][j].rgbtGreen = sepiaGreen;
             image[i][j].rgbtRed = sepiaRed;
         }
     }
-    return;
 }
 
 // Reflect image horizontally
@@ -56,21 +47,12 @@ void reflect(int height, int width, RGBTRIPLE image[height][width])
     RGBTRIPLE tmp_image[height][width]; // create new temp array for reflected picture
     for (int i = 0; i < height; i++)
     {
-        int x = width - 1;
         for (int j = 0; j < width; j++)
         {
-            tmp_image[i][x] = image[i][j];
-            x--;
+            tmp_image[i][width - j - 1] = image[i][j];
         }
     }
-    for (int i = 0; i < height; i++)
-    {
-        for (int j = 0; j < width; j++)
-        {
-            image[i][j] = tmp_image[i][j]; // copy reflected image from temp array to the original image
-        }
-    }
-    return;
+    copy(height, width, image, tmp_image);
 }
 
 // Blur image
@@ -87,13 +69,13 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
             rgbtBlue = image[i][j].rgbtBlue;
             rgbtGreen = image[i][j].rgbtGreen;
             rgbtRed = image[i][j].rgbtRed;
-            if (!(i - 1 < 0)) // if above line is exist
+            if (i >= 1) // if above line is exist
             {
                 rgbtBlue += image[i - 1][j].rgbtBlue;
                 rgbtGreen += image[i - 1][j].rgbtGreen;
                 rgbtRed += image[i - 1][j].rgbtRed;
                 z++;
-                if (!(j - 1 < 0)) // if left pixel on line above is exist
+                if (j >= 1) // if left pixel on line above is exist
                 {
                     rgbtBlue += image[i - 1][j - 1].rgbtBlue;
                     rgbtGreen += image[i - 1][j - 1].rgbtGreen;
@@ -108,7 +90,7 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
                     z++;
                 }
             }
-            if (!(j - 1 < 0)) // if left pixel on current line is exist
+            if (j >= 1) // if left pixel on current line is exist
             {
                 rgbtBlue += image[i][j - 1].rgbtBlue;
                 rgbtGreen += image[i][j - 1].rgbtGreen;
@@ -128,7 +110,7 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
                 rgbtGreen += image[i + 1][j].rgbtGreen;
                 rgbtRed += image[i + 1][j].rgbtRed;
                 z++;
-                if (!(j - 1 < 0)) // if left pixel on line below is exist
+                if (j >= 1) // if left pixel on line below is exist
                 {
                     rgbtBlue += image[i + 1][j - 1].rgbtBlue;
                     rgbtGreen += image[i + 1][j - 1].rgbtGreen;
@@ -148,7 +130,11 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
             tmp_image[i][j].rgbtRed = round(rgbtRed / (float)z);
         }
     }
+    copy(height, width, image, tmp_image);
+}
 
+void copy(int height, int width, RGBTRIPLE image[height][width], RGBTRIPLE tmp_image[height][width])
+{
     for (int i = 0; i < height; i++)
     {
         for (int j = 0; j < width; j++)
@@ -156,5 +142,4 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
             image[i][j] = tmp_image[i][j];
         }
     }
-    return;
 }
