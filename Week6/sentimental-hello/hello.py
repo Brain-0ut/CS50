@@ -1,0 +1,1 @@
+print(f"hello, {input('What is your name? ')}")  # ask a username inside the print function
