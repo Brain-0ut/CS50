@@ -97,14 +97,11 @@ bool unload(void)
     for (int i = 1; i < sizeof(table) / 8; i++)
     {
         tmp = table[i];
-        if (tmp != NULL)
+        while (tmp != NULL)
         {
-            while (tmp != NULL)
-            {
-                tmp = table[i]->next;
-                free(table[i]);
-                table[i] = tmp;
-            }
+            tmp = table[i]->next;
+            free(table[i]);
+            table[i] = tmp;
         }
     }
     return true;
