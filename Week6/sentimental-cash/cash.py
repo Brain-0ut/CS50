@@ -14,8 +14,9 @@ def main():
     coins = [25, 10, 5, 1]
     count = 0  # count of coins
     for coin in coins:
-        count += change // coin
-        change -= coin * (change // coin)
+        count_coin = change // coin
+	count += count_coin
+        change -= coin * count_coin
     print(count)
 
 
